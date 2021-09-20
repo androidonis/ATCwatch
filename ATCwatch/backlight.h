@@ -10,6 +10,8 @@
 
 void init_backlight();
 void set_backlight();
+void set_bright(uint8_t lowbright);
+void disp_pwm(bool state);
 int get_backlight();
 void set_backlight(int brightness);
 void inc_backlight();
