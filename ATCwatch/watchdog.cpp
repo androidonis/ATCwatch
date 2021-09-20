@@ -11,7 +11,7 @@
 #include <nrf_soc.h>
 
 void init_watchdog() {
-  watchdog_enable(5000);
+  watchdog_enable(8000);
 }
 
 void watchdog_enable(int timeout) {
