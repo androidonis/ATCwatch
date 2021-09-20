@@ -1,6 +1,6 @@
 /*
    Copyright (c) 2020 Aaron Christophel
-
+    modifications (c) 2021 Andreas Loew
    SPDX-License-Identifier: GPL-3.0-or-later
 */
 
@@ -14,6 +14,7 @@
 #include "inputoutput.h"
 #include "inputoutput.h"
 #include "battery.h"
+#include "backlight.h"
 
 long last_button_press = 0;
 
@@ -196,6 +197,7 @@ void interrupt_button() {
       button_pressed = true;
       button_press_begin = millis();
     } else {
+      set_backlight(7); // on button select max backlight
       display_home();
       set_motor_ms(40);
       set_sleep_time();
