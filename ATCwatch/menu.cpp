@@ -73,7 +73,7 @@ AppScreen apps2Screen(2, maxApps, &rebootApp, &updateApp, &offApp, &settingsApp)
 AppScreen apps3Screen(3, maxApps, &infosApp, &acclApp, &demoApp, &batteryApp);
 AppScreen apps4Screen(4, maxApps, &flashApp, &touchApp, &httpApp, &logApp);
 
-Screen_def *menus[5] = {&homeScreen, &apps1Screen, &apps2Screen, &apps3Screen, &apps4Screen};
+Screen_def *menus[5] = {&homeScreen, &apps1Screen, &apps2Screen, &apps3Screen, &apps4Screen};//
 
 void init_menu() {
 
@@ -82,6 +82,8 @@ void init_menu() {
 void display_home() {
   lastScreen = currentScreen;
   currentScreen = &homeScreen;
+//  currentScreen = &heartScreen;//&acclScreen;&heartScreen;
+
   vars_menu = 0;
 }
 
@@ -97,10 +99,11 @@ void display_charging() {
   vars_menu = 0;
 }
 
-void display_booting() {
+void display_booting(int w) {
   set_gray_screen_style();
   lastScreen = currentScreen;
   currentScreen = &bootScreen;
+  bootScreen.setWhere(w);
   oldScreen = &bootScreen;
   set_swipe_enabled(false);
   currentScreen->pre_display();
