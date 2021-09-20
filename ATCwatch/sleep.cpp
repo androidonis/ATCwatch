@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2020 Aaron Christophel
- *
+ * modifications (c) 2021 Andreas Loew
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -23,9 +23,14 @@
 
 bool sleep_enable = false;
 bool sleep_sleeping = false;
+bool dis_pwm = true;
 int wakeup_reason = 0;
 long lastaction = 0;
 long last_sleep_check;
+
+void shdn_pwm(bool state){
+  dis_pwm = state;
+  }
 
 void init_sleep() {
   //sd_power_dcdc_mode_set(NRF_POWER_DCDC_ENABLE);
@@ -46,6 +51,7 @@ bool sleep_up(int reason) {
     wakeup_reason = reason;
     sleep_sleeping = false;
     set_sleep_time();
+    pinMode(LCD_BACKLIGHT_LOW, OUTPUT);
     display_enable(true);
     set_backlight();
     if (get_charge()) {
@@ -71,18 +77,22 @@ int get_wakeup_reason() {
 
 void disable_hardware() {
   sleep_touch(true);
-  set_backlight(0);
+
   inc_tick();
   display_home();
   display_screen(true);
   end_hrs3300();
   set_led(0);
   set_motor(0);
-  display_enable(false);
+  set_backlight(0);
   NRF_SAADC ->ENABLE = 0; //disable ADC
+  if (dis_pwm){ 
+  display_enable(false);
   NRF_PWM0  ->ENABLE = 0; //disable all pwm instance
   NRF_PWM1  ->ENABLE = 0;
   NRF_PWM2  ->ENABLE = 0;
+  pinMode(LCD_BACKLIGHT_LOW, INPUT_PULLUP);
+  }
 }
 
 void sleep_wait() {
