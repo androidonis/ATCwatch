@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2020 Aaron Christophel
- *
+ * modifications (c) 2021 Andreas Loew
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -24,6 +24,7 @@
 #define buffer_lcd_size LV_HOR_RES_MAX * 30
 static lv_disp_buf_t disp_buf;
 static lv_color_t buf[buffer_lcd_size];
+
 
 void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p)
 {
@@ -95,8 +96,16 @@ void display_enable(bool state) {
     spiCommand(ST77XX_SLPOUT);
   } else {
     spiCommand(ST77XX_SLPIN);
-    spiCommand(ST77XX_DISPOFF);
+ //   spiCommand(ST77XX_DISPOFF);
   }
+  endWrite_display();
+}
+
+
+void display_off() {
+  uint8_t temp[2];
+  startWrite_display();
+  spiCommand(ST77XX_DISPOFF);
   endWrite_display();
 }
 
