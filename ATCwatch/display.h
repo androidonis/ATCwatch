@@ -16,6 +16,7 @@
 
 void init_display();
 void display_enable(bool state);
+void display_off();
 void inc_tick();
 
 void setAddrWindowDisplay(uint32_t x, uint32_t y, uint32_t w, uint32_t h);
