@@ -15,6 +15,11 @@ void init_i2c();
 
 //void set_i2cReading(bool state);
 bool get_i2cReading();
+uint32_t scan_i2c();
+uint32_t rdid_i2c();
+void usr_i2c_wreg(uint8_t daddr, uint8_t waddr, uint8_t data);
+uint8_t usr_i2c_rreg(uint8_t daddr, uint8_t raddr);
+
 uint8_t user_i2c_read(uint8_t addr, uint8_t reg_addr, uint8_t *reg_data, uint32_t length);
 uint8_t user_i2c_write(uint8_t addr, uint8_t reg_addr, const uint8_t *reg_data, uint32_t length);
 
