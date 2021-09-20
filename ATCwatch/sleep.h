@@ -19,6 +19,7 @@
 #define WAKEUP_ACCL_INT 9
 #define WAKEUP_BLEHTTP 10
 
+void shdn_pwm(bool state);
 void init_sleep();
 void set_sleep(bool state);
 bool get_sleep();
