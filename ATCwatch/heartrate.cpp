@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2020 Aaron Christophel
- *
+ * modifications (c) 2021 Andreas Loew
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -21,6 +21,9 @@ bool timed_heart_rates = true;
 bool has_good_heartrate = false;
 int hr_answers;
 bool disabled_hr_allready = false;
+uint8_t heartrates[501] = {0}; //history of rates
+int nextminute = 99; 
+byte hr;
 
 void init_hrs3300() {
   pinMode(HRS3300_TEST, INPUT);
@@ -70,14 +73,17 @@ void get_heartrate_ms() {
     last_heartrate_ms = HRS3300_getHR();
   }
 }
+byte get_hearthistory(uint16_t history) {
+  return heartrates[history];
+}
 
 void check_timed_heartrate(int minutes) {
   if (timed_heart_rates) {
-    if (minutes == 0 || minutes == 15 || minutes == 30 || minutes == 45) {
+    if (minutes == nextminute || nextminute == 99 ) {
       if (!has_good_heartrate) {
         disabled_hr_allready = false;
         start_hrs3300();
-        byte hr = get_heartrate();
+        hr = get_heartrate();
         if (hr > 0 && hr < 253) {
           hr_answers++;
           if (hr_answers >= 5) {
@@ -91,6 +97,10 @@ void check_timed_heartrate(int minutes) {
         }
       } else {
         end_hrs3300();
+        nextminute = minutes + 2; if (nextminute > 59) nextminute = nextminute - 60;
+        for (int16_t lp=499; lp>0; lp--) heartrates[lp] = heartrates[lp-1]; //shift up history
+        heartrates[0]=hr; // just take last measurement, maybe median filter the 5 measurements.
+        heartrates[500]=nextminute;
       }
     } else {
       if (!disabled_hr_allready) {
