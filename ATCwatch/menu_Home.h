@@ -29,19 +29,63 @@ class HomeScreen : public Screen
     {
       time_data = get_time();
       accl_data = get_accl_data();
-
-      lv_style_copy( &st, &lv_style_plain );
-      st.text.color = lv_color_hsv_to_rgb(10, 5, 95);
-      st.text.font = &mksd50;
-
+    uint8_t wday = (6+time_data.day+((time_data.year-2000-(time_data.month<3))/4)+"beehcfhdgbeg"[time_data.month-1]+(time_data.year-2000))%7; 
+ 
+      lv_style_copy( &stx, &lv_style_plain );
+      stx.text.color = LV_COLOR_ORANGE; //lv_color_hsv_to_rgb(10, 5, 95);
+      stx.text.font = &mksd50;
+      label_sun = lv_label_create(lv_scr_act(), NULL);
+      lv_label_set_text_fmt(label_sun,  "@");
+      lv_obj_set_style( label_sun, &stx );
+      lv_obj_align(label_sun, NULL, LV_ALIGN_IN_TOP_LEFT, 5, 55);//LV_ALIGN_CENTER, -40, -30);
+      
+      
+      lv_style_copy( &stt, &lv_style_plain );
+      stt.text.color = LV_COLOR_ORANGE; //lv_color_hsv_to_rgb(10, 5, 95);
+      stt.text.font = &mksd50;
       label_time = lv_label_create(lv_scr_act(), NULL);
-      lv_label_set_text_fmt(label_time,  "%02i:%02i:%02i", time_data.hr, time_data.min, time_data.sec);
-      lv_obj_set_style( label_time, &st );
-      lv_obj_align(label_time, NULL, LV_ALIGN_CENTER, 0, -40);
+      lv_label_set_text_fmt(label_time,  "%02i:%02i:", time_data.hr, time_data.min);
+      lv_obj_set_style( label_time, &stt );
+      lv_obj_align(label_time, NULL, LV_ALIGN_CENTER, -20, -30);
+ 
+      lv_style_copy( &sts, &lv_style_plain );
+      sts.text.color = LV_COLOR_ORANGE; //lv_color_hsv_to_rgb(10, 5, 95);
+      sts.text.font = &mksd50;
+      label_sec = lv_label_create(lv_scr_act(), NULL);
+      lv_label_set_text_fmt(label_sec,  "%02i", time_data.sec);
+      lv_obj_set_style( label_sec, &sts );
+      lv_obj_align(label_sec, NULL, LV_ALIGN_CENTER, 70, -30);
+
+     lv_style_copy( &stwd, &lv_style_plain );
+      stwd.text.color = LV_COLOR_RED;
+      stwd.text.font = &mksd50;
+      label_wday = lv_label_create(lv_scr_act(), NULL);
+     lv_label_set_text_fmt(label_wday, "%c%c", "SMDMDFS"[0], "ooiiora"[0]);
+     lv_obj_set_style( label_wday, &stwd );
+      lv_obj_align(label_wday, NULL, LV_ALIGN_CENTER, -90, 30);
+      
+      lv_style_copy( &std, &lv_style_plain );
+      std.text.color = LV_COLOR_CYAN; //lv_color_hsv_to_rgb(10, 5, 95);
+      std.text.font = &mksd50;
       label_date = lv_label_create(lv_scr_act(), NULL);
-      lv_label_set_text_fmt(label_date, "%02i.%02i.%04i", time_data.day, time_data.month, time_data.year);
-      lv_obj_set_style( label_date, &st );
-      lv_obj_align(label_date, NULL, LV_ALIGN_CENTER, 0, 30);
+      lv_label_set_text_fmt(label_date, "%02i.%02i.%02i", time_data.day, time_data.month, (time_data.year-2000));
+      lv_obj_set_style( label_date, &std );
+      lv_obj_align(label_date, NULL, LV_ALIGN_CENTER, 30, 30);
+
+      label_temp = lv_label_create(lv_scr_act(), NULL);
+      lv_label_set_text(label_temp, "Temp:");
+      lv_obj_align(label_temp, NULL, LV_ALIGN_IN_TOP_LEFT, 140, 0);
+
+
+      label_x = lv_label_create(lv_scr_act(), NULL);
+      lv_label_set_text(label_x, "X:");
+      lv_obj_align(label_x, NULL, LV_ALIGN_IN_TOP_LEFT, 5, 25);
+      label_y = lv_label_create(lv_scr_act(), NULL);
+      lv_label_set_text(label_y, "Y:");
+      lv_obj_align(label_y, NULL, LV_ALIGN_IN_TOP_LEFT, 90, 25);
+      label_z = lv_label_create(lv_scr_act(), NULL);
+      lv_label_set_text(label_z, "Z:");
+      lv_obj_align(label_z, NULL, LV_ALIGN_IN_TOP_LEFT, 175, 25);
 
 
       label_battery = lv_label_create(lv_scr_act(), NULL);
@@ -75,7 +119,7 @@ class HomeScreen : public Screen
 
       img_steps = lv_img_create(lv_scr_act(), NULL);
       lv_img_set_src(img_steps, &IsymbolStepsSmall);
-      lv_obj_align(img_steps, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 120, -34);
+      lv_obj_align(img_steps, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 170, -34);
 
       label_steps = lv_label_create(lv_scr_act(), NULL);
       lv_obj_set_width(label_steps, 240);
@@ -104,13 +148,29 @@ class HomeScreen : public Screen
     {
       time_data = get_time();
       accl_data = get_accl_data();
+      uint8_t cfd[48] = {32,64,96,128,160,192,224,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,224,192,160,128,96,64,32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+      uint8_t wday = (5+time_data.day+((time_data.year-2000-(time_data.month<3))/4)+"beehcfhdgbeg"[time_data.month-1]+(time_data.year-2000))%7; 
+      stx.text.color = LV_COLOR_MAKE(cfd[((time_data.hr*5/3)+32)%48], cfd[(time_data.hr*5/3)], cfd[((time_data.hr*5/3)+16)%48]); //
+      if (time_data.sec%2==0) lv_label_set_text_fmt(label_sun, "@"); else lv_label_set_text_fmt(label_sun, ":");
+      stt.text.color = LV_COLOR_WHITE;
+      lv_label_set_text_fmt(label_time,  "%02i:%02i:", time_data.hr, time_data.min);
+      sts.text.color = LV_COLOR_MAKE(cfd[(((time_data.sec*2)/3)+32)%48], cfd[((time_data.sec*2)/3)], cfd[(((time_data.sec*2)/3)+16)%48]); //
+      lv_label_set_text_fmt(label_sec,  "%02i", time_data.sec);
+      stwd.text.color = LV_COLOR_MAKE(cfd[(wday*6+32)%48], cfd[wday*6], cfd[(wday*6+16)%48]); //lv_color_hsv_to_rgb(wday*8000, 255, 255);
+     lv_label_set_text_fmt(label_wday,  "%c%c","MDMDFSS"[wday], "oiiorao"[wday]);
+      std.text.color = LV_COLOR_MAKE(cfd[47-((time_data.month-1)*3+time_data.day/10)], cfd[((time_data.month-1)*3+time_data.day/10)], cfd[(((time_data.month-1)*3+time_data.day/10)+16)%48]); //lv_color_hsv_to_rgb((time_data.month*31+time_data.day)*150, 255, 255);
+      lv_label_set_text_fmt(label_date, "%02i.%02i.%02i", time_data.day, time_data.month, (time_data.year-2000));
+      //display accl data, add +3/+28/+520 to see 0 0 0 on a flat table.
+      lv_label_set_text_fmt(label_x, "X: %i", accl_data.x+3);
+      lv_label_set_text_fmt(label_y, "Y: %i", accl_data.y+28);
+      lv_label_set_text_fmt(label_z, "Z: %i", accl_data.z+520);
+      lv_label_set_text_fmt(label_temp, "Temp: %2.1f", (float)accl_data.temp);
 
-      lv_label_set_text_fmt(label_time,  "%02i:%02i:%02i", time_data.hr, time_data.min, time_data.sec);
-      lv_label_set_text_fmt(label_date, "%02i.%02i.%04i", time_data.day, time_data.month, time_data.year);
+
 
       lv_label_set_text_fmt(label_battery, "%i%%", get_battery_percent());
 
-      lv_label_set_text_fmt(label_heart, "%i", get_last_heartrate());
+      lv_label_set_text_fmt(label_heart, "%i_%i_%i_%i_(%i)", get_hearthistory(0),get_hearthistory(1),get_hearthistory(2),get_hearthistory(3),get_hearthistory(500));
       lv_label_set_text_fmt(label_steps, "%i", accl_data.steps);
 
       if (get_vars_ble_connected())
@@ -153,9 +213,10 @@ class HomeScreen : public Screen
   private:
     time_data_struct time_data;
     accl_data_struct accl_data;
-    lv_style_t st;
+    lv_style_t stt,std,stwd,sts, stx;
     lv_obj_t *label, *label_heart, *label_steps, *label_msg;
-    lv_obj_t *label_time, *label_date;
+    lv_obj_t *label_sun,*label_time,*label_sec, *label_date, *label_wday;
+    lv_obj_t *label_temp,*label_x, *label_y, *label_z;
     lv_obj_t *label_ble, *label_battery;
     lv_style_t style_ble, style_battery, style_msg;
     lv_obj_t * img_heart, *img_steps, *img_msg;
