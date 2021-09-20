@@ -14,4 +14,5 @@ void end_hrs3300();
 byte get_heartrate();
 byte get_last_heartrate();
 void get_heartrate_ms();
+byte get_hearthistory(uint16_t history);
 void check_timed_heartrate(int minutes);
