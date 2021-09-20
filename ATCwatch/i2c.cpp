@@ -11,7 +11,10 @@
 volatile bool i2cReading = false;
 
 void init_i2c() {
-  Wire_begin();
+
+  pinMode(HRS3300_SCL, OUTPUT);
+  for(uint16_t lpct=0; lpct<500; lpct++) {digitalWrite(HRS3300_SCL, LOW); delay(1); digitalWrite(HRS3300_SCL, HIGH); delay(1);}  
+  Wire_begin(); 
 }
 
 void set_i2cReading(bool state) {
@@ -21,6 +24,41 @@ void set_i2cReading(bool state) {
 bool get_i2cReading() {
   return i2cReading;
 }
+
+uint32_t scan_i2c() {
+      uint32_t i2c_cnf = 0; uint32_t device = 0x1;
+      for( byte addr = 1; addr < 127; addr++ )
+  {
+    // The i2c_scanner uses the return value of the Write.endTransmisstion to see if a device did acknowledge to the address.
+    Wire_beginTransmission(addr);
+    byte error = Wire_endTransmission(true); 
+    if (error == 0)
+    {
+      if (device < 0x1000000){ i2c_cnf = i2c_cnf + addr*device; device = device*0x100; }
+    }
+  
+  }
+  return i2c_cnf;
+}
+
+uint32_t rdid_i2c() {
+     uint32_t i2c_id = 0; uint32_t device = 0x1;
+      for( byte addr = 1; addr < 127; addr++ )
+  {
+    // The i2c_scanner uses the return value of the Write.endTransmisstion to see if a device did acknowledge to the address.
+    Wire_beginTransmission(addr);
+    byte error = Wire_endTransmission(true); 
+    if (error == 0)
+    {
+     Wire_requestFrom(addr, 1,true); 
+      if (device < 0x1000000){ i2c_id = i2c_id + Wire_read()*device; device = device*0x100; }
+    }
+  
+  }
+  return i2c_id;
+  
+}
+
 
 uint8_t user_i2c_read(uint8_t addr, uint8_t reg_addr, uint8_t *reg_data, uint32_t length)
 {
@@ -36,6 +74,14 @@ uint8_t user_i2c_read(uint8_t addr, uint8_t reg_addr, uint8_t *reg_data, uint32_
   return 0;
 }
 
+uint8_t usr_i2c_rreg(uint8_t daddr, uint8_t raddr)
+{
+  uint8_t data;
+  user_i2c_read(daddr, raddr, &data, 1);
+  return data;
+}
+
+
 uint8_t user_i2c_write(uint8_t addr, uint8_t reg_addr, const uint8_t *reg_data, uint32_t length)
 {
   byte error;
@@ -49,6 +95,11 @@ uint8_t user_i2c_write(uint8_t addr, uint8_t reg_addr, const uint8_t *reg_data, 
   set_i2cReading(false);
   return 0;
 }
+
+void usr_i2c_wreg(uint8_t daddr, uint8_t waddr, uint8_t data) {
+  user_i2c_write(daddr, waddr, &data, 1);
+}
+
 
 uint8_t _uc_pinSDA = g_ADigitalPinMap[TP_SDA];
 uint8_t _uc_pinSCL = g_ADigitalPinMap[TP_SCL];
