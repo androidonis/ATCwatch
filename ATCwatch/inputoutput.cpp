@@ -21,6 +21,9 @@ void init_inputoutput() {
   if (PUSH_BUTTON_OUT != -1) {
     pinMode(PUSH_BUTTON_OUT, OUTPUT);
     digitalWrite(PUSH_BUTTON_OUT, HIGH);
+    pinMode(Lamp_PWM1, OUTPUT);
+    pinMode(Lamp_PWM2, OUTPUT);
+    analogWrite(Lamp_PWM1,64); analogWrite(Lamp_PWM2,128);
   }
 
   set_led(0);
