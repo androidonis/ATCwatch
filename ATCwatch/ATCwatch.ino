@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2020 Aaron Christophel
- *
+ * changes 2021 by Andreas Loew
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -29,35 +29,46 @@ bool stepsWhereReseted = false;
 
 void setup() {
   delay(500);
-  if (get_button()) {//if button is pressed on startup goto Bootloader
+  if (get_button()) {//if button is pressed on startup goto Bootloader, function of inputoutput.cpp
     NRF_POWER->GPREGRET = 0x01;
     NVIC_SystemReset();
   }
-  init_watchdog();// Init all kind of hardware and software
-  initRTC2();
+  init_watchdog();// Init watchdog with time: watchdog_enable(8000); in watchdog.cpp
+  initRTC2(); //see sleep.cpp
   init_tasks();
   init_bootloader();
   init_fast_spi();//needs to be before init_display and external flash
   init_i2c();//needs to be before init_hrs3300, init_touch and init_accl
   init_inputoutput();
-  init_backlight();
+  init_backlight(); // just declare the 3 pins that control the LED and set intensity to (0), all pins are high. LED resistor 30Ohm,100Ohm,2.2KOhm (PineT)
+  set_backlight(7);
   init_display();
-  display_booting();
-  set_backlight(3);
+  display_booting(10); 
   init_battery();
+  display_booting(9);
   init_hrs3300();
+  display_booting(8);
   init_time();
+  display_booting(7);
   init_touch();
+  display_booting(6);
   init_sleep();
+  display_booting(5);
   init_menu();
+  display_booting(4);
   init_push();
+  display_booting(3);
   init_flash();
+  display_booting(2);
   init_accl();
+  display_booting(1);
   init_ble();//must be before interrupts!!!
+  display_booting(0);
   init_interrupt();//must be after ble!!!
   delay(100);
   set_backlight(3);
-  display_home();
+  clrtermin();
+  display_home(); //menu.cpp
 }
 
 void loop() {
@@ -83,8 +94,9 @@ void loop() {
         reset_step_counter();
       }
     } else stepsWhereReseted = false;
-
-    check_timed_heartrate(time_data.min);//Meassure HR every 15minutes
+// check for stored dates:
+    checktermin(time_data); //define in ble.h
+   check_timed_heartrate(time_data.min);//Meassure HR every 15minutes
   }
   gets_interrupt_flag();//check interrupt flags and do something with it
 }
