@@ -37,20 +37,21 @@ I experienced a hang with blocked I2C communication. Solution was to toggle SCL 
 see i2c.cpp for details.
 
 Backlight:
-I work to get PWM running on the Backlight pins. I will test an option to have all time on night display with minimal LED current (0.5mA?)
-This should be configurable with BLE command AT+BLllmmhh, ll=PWM value for low-pin, mm= PWM value for mid-pin, hh= PWM value for high-pin
+I implemented PWM on the Backlight pins. During night hours the display has a very low intensity with minimal LED current (0.5mA?). 
+The maximum intensity is always set temporarily with push button.
+Configurable with BLE command AT+BLllmmhh, ll=PWM value for low-pin, mm= PWM value for mid-pin, hh= PWM value for high-pin
 sleep.cpp needs to be modified to not disable PWM, if BLE command AT+CBL1 is send, AT+CBL0 for default.
 see backlight.cpp for details.
 
 
-
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 About 150–200uA standby current consumtion. Currently 92 Hours Runtime with heavy notification and usage!
 Basic menu system and notification working.
 
 If you want to use it on PineTime comment the #define P8WATCH to enable the PineTime Pinout. 
 For other watches please try to check the pinout of them and make changes as needed.
 
-**You can support my work via paypal: https://paypal.me/hoverboard1 This keeps projects like this coming.**
+**You can support Aaron Christophel via paypal: https://paypal.me/hoverboard1 This keeps projects like this coming.**
 
 Use this portable Arduino version:
 - https://atcnetz.de/downloads/D6Arduino.rar
