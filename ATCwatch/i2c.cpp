@@ -11,8 +11,9 @@
 volatile bool i2cReading = false;
 bool blockint = false;
 
-void blkint(){
+bool blkint(){
   if (blockint) blockint=false; else blockint = true;
+  return blockint;
   }
 
 void init_i2c() {
