@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2020 Aaron Christophel
- *
+ * 211004 changes by Andreas Loew
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -169,8 +169,18 @@ class HomeScreen : public Screen
 
 
       lv_label_set_text_fmt(label_battery, "%i%%", get_battery_percent());
-
-      lv_label_set_text_fmt(label_heart, "%i_%i_%i_%i_(%i)", get_hearthistory(0),get_hearthistory(1),get_hearthistory(2),get_hearthistory(3),get_hearthistory(500));
+      byte hrma = 1;
+      byte hrmi = 250;
+      uint32_t hrav = 0;
+      int16_t hrcnt=1;
+      for (int lpct = 1; lpct < 60; lpct++) {
+        if  (get_hearthistory(lpct)>0) {
+          hrav+=get_hearthistory(lpct); hrcnt++; 
+          if (get_hearthistory(lpct)>hrma) hrma=get_hearthistory(lpct); 
+          if (get_hearthistory(lpct)<hrmi) hrmi=get_hearthistory(lpct);   
+          }
+      }
+      lv_label_set_text_fmt(label_heart, "%i_%i<%i<%i_@%i", get_hearthistory(0),hrmi,(hrav+get_hearthistory(0))/(hrcnt),hrma,get_hearthistory(600));
       lv_label_set_text_fmt(label_steps, "%i", accl_data.steps);
 
       if (get_vars_ble_connected())
