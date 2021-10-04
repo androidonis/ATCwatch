@@ -101,9 +101,9 @@ void clrtermin(){
 }
 
 void init_ble() {
-  blePeripheral.setLocalName("AL_Watch_P8a"); //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<inividual label for a certain device ALtable_P8a
+  blePeripheral.setLocalName("AL_tableWatch_P8a"); //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<inividual label for a certain device ALtable_P8a
   blePeripheral.setAdvertisingInterval(500);
-  blePeripheral.setDeviceName("AL_Watch_P8a"); //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<inividual label for a certain device ALtable_P8a
+  blePeripheral.setDeviceName("AL_tableWatch_P8a"); //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<inividual label for a certain device ALtable_P8a
   blePeripheral.setAdvertisedServiceUuid(main_service.uuid());
   blePeripheral.addAttribute(main_service);
   blePeripheral.addAttribute(TXchar);
@@ -305,8 +305,7 @@ else if (Command.substring(0, 8) == "AT+heart") {
    String heartinfo = "";
    for (int8_t lpct = 0; lpct < 10; lpct++){ heartinfo += String(get_hearthistory((start+lpct)%500))+ " "; }
        ble_write(heartinfo);
-      show_push(heartinfo); 
-  
+      show_push(heartinfo);   
   }
 else if (Command.substring(0, 5) == "AT+BL") {
    uint8_t perc1 = (uint8_t)(strtoul(Command.substring(5,7).c_str(), NULL, 16));
@@ -318,6 +317,9 @@ else if (Command.substring(0, 6) == "AT+PWM") {
    if (val==0) { disp_pwm(false); show_push("NoPWM"); shdn_pwm(true); } 
    if (val==1)  {disp_pwm(true); show_push("DisplayPWM"); } 
    if (val==2)  {shdn_pwm(false); show_push("PWMalwaysOn"); }  
+  }
+else if (Command.substring(0, 6) == "AT+int") {
+   if (blkint()) show_push("NoInterrupt_I2C"); else show_push("Interrupt_I2C");	 
   }
   
 else if (Command.substring(0, 5) == "AT+cd") {
