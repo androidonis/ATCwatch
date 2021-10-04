@@ -12,6 +12,7 @@
 #include "RingBuffer.h"
 
 void init_i2c();
+void blkint();
 
 //void set_i2cReading(bool state);
 bool get_i2cReading();
