@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2020 Aaron Christophel
- * changes 2021 by Andreas Loew
+ *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -66,7 +66,7 @@ void setup() {
   display_booting(0);
   init_interrupt();//must be after ble!!!
   delay(100);
-  set_backlight(3);
+  set_backlight(1);
   clrtermin();
   display_home(); //menu.cpp
 }
@@ -96,7 +96,7 @@ void loop() {
     } else stepsWhereReseted = false;
 // check for stored dates:
     checktermin(time_data); //define in ble.h
-   check_timed_heartrate(time_data.min);//Meassure HR every 15minutes
+   check_timed_heartrate(time_data.min);//Meassure HR every 1minutes
   }
   gets_interrupt_flag();//check interrupt flags and do something with it
 }
