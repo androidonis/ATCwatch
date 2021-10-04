@@ -21,7 +21,7 @@ bool timed_heart_rates = true;
 bool has_good_heartrate = false;
 int hr_answers;
 bool disabled_hr_allready = false;
-uint8_t heartrates[501] = {0}; //history of rates
+uint8_t heartrates[601] = {0}; //history of rates
 int nextminute = 99; 
 byte hr;
 
@@ -97,10 +97,10 @@ void check_timed_heartrate(int minutes) {
         }
       } else {
         end_hrs3300();
-        nextminute = minutes + 2; if (nextminute > 59) nextminute = nextminute - 60;
-        for (int16_t lp=499; lp>0; lp--) heartrates[lp] = heartrates[lp-1]; //shift up history
+        nextminute = minutes + 1; if (nextminute > 59) nextminute = nextminute - 60;
+        for (int16_t lp=599; lp>0; lp--) heartrates[lp] = heartrates[lp-1]; //shift up history
         heartrates[0]=hr; // just take last measurement, maybe median filter the 5 measurements.
-        heartrates[500]=nextminute;
+        heartrates[600]=nextminute;
       }
     } else {
       if (!disabled_hr_allready) {
