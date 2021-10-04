@@ -9,6 +9,11 @@
 #include "i2c.h"
 
 volatile bool i2cReading = false;
+bool blockint = false;
+
+void blkint(){
+  if (blockint) blockint=false; else blockint = true;
+  }
 
 void init_i2c() {
 
@@ -63,13 +68,17 @@ uint32_t rdid_i2c() {
 uint8_t user_i2c_read(uint8_t addr, uint8_t reg_addr, uint8_t *reg_data, uint32_t length)
 {
   set_i2cReading(true);
+if (blockint)  NVIC_DisableIRQ(GPIOTE_IRQn);
   Wire_beginTransmission(addr);
   Wire_write(reg_addr);
-  if ( Wire_endTransmission(true))return -1;
+  if ( Wire_endTransmission(true)){
+if (blockint)    NVIC_EnableIRQ(GPIOTE_IRQn);
+    return -1;}
   Wire_requestFrom(addr, length,true);
   for (int i = 0; i < length; i++) {
     *reg_data++ = Wire_read();
   }
+if (blockint)  NVIC_EnableIRQ(GPIOTE_IRQn);
   set_i2cReading(false);
   return 0;
 }
@@ -86,12 +95,17 @@ uint8_t user_i2c_write(uint8_t addr, uint8_t reg_addr, const uint8_t *reg_data, 
 {
   byte error;
   set_i2cReading(true);
+if (blockint)  NVIC_DisableIRQ(GPIOTE_IRQn);
   Wire_beginTransmission(addr);
   Wire_write(reg_addr);
   for (int i = 0; i < length; i++) {
     Wire_write(*reg_data++);
   }
-  if ( Wire_endTransmission(true))return -1;
+  if ( Wire_endTransmission(true)){
+if (blockint)    NVIC_EnableIRQ(GPIOTE_IRQn);
+    return -1;
+     }
+if (blockint)  NVIC_EnableIRQ(GPIOTE_IRQn);   
   set_i2cReading(false);
   return 0;
 }
