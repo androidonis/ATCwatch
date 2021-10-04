@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2020 Aaron Christophel
- *
+ * changes 2021 by Andreas Loew
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -10,17 +10,19 @@
 #include "heartrate.h"
 #include "inputoutput.h"
 #include <TimeLib.h>
+// #include "nrf_rtc.h" in progress to store time in a rtc that survives a reboot
 
 time_data_struct time_data;
 
+
 void init_time() {
-  int year = 2020;
-  int month = 1;
+  int year = 2021;
+  int month = 10;
   int day = 1;
-  int hr = 0;
-  int min = 0;
+  int hr = 23;
+  int min = 44;
   int sec = 0;
-  setTime( hr, min, sec, day, month, year);
+  if (get_time().year < 2021) setTime( hr, min, sec, day, month, year);
 }
 
 time_data_struct get_time() {
