@@ -37,14 +37,14 @@ class BatteryScreen : public Screen
 
       label_battery_big = lv_label_create(lv_scr_act(), NULL);
       lv_obj_set_style( label_battery_big, &st );
-      lv_label_set_text(label_battery_big, "---%");
+      lv_label_set_text(label_battery_big, "Bat:---%");
       lv_obj_align(label_battery_big, lv_scr_act(), LV_ALIGN_CENTER, 0, -20);
 
       label_backlight_big = lv_label_create(lv_scr_act(), NULL);
       lv_obj_set_style( label_backlight_big, &st );
       lv_label_set_text(label_backlight_big, "-");
-      lv_obj_align(label_backlight_big, lv_scr_act(), LV_ALIGN_CENTER, 0, 50);
-      lv_label_set_text_fmt(label_backlight_big, "%i", get_backlight());
+      lv_obj_align(label_backlight_big, lv_scr_act(), LV_ALIGN_CENTER, -50, 50);
+      lv_label_set_text_fmt(label_backlight_big, "BLight:%i", get_backlight());
 
       lv_style_copy(&style_battery, lv_label_get_style(label_battery, LV_LABEL_STYLE_MAIN));
       style_battery.text.color = lv_color_hsv_to_rgb(10, 5, 95);
@@ -53,8 +53,9 @@ class BatteryScreen : public Screen
 
     virtual void main()
     {
+      if (get_charge()) st.text.color = LV_COLOR_ORANGE; else st.text.color = LV_COLOR_CYAN;
       lv_label_set_text_fmt(label_battery, "%i%%", get_battery_percent());
-      lv_label_set_text_fmt(label_battery_big, "%i%%", get_battery_percent());
+      lv_label_set_text_fmt(label_battery_big, "Bat:%i%%", get_battery_percent());
       if (get_charge())
         style_battery.text.color = lv_color_hsv_to_rgb(10, 5, 95);
       else
