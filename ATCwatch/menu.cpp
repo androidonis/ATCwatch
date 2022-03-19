@@ -82,7 +82,7 @@ void init_menu() {
 void display_home() {
   lastScreen = currentScreen;
   currentScreen = &homeScreen;
-//  currentScreen = &heartScreen;//&acclScreen;&heartScreen;
+//  currentScreen = &chargingScreen;//&acclScreen;&heartScreen;&heartScreen
 
   vars_menu = 0;
 }
