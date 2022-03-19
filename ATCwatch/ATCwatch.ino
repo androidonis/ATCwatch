@@ -26,6 +26,9 @@
 #include "flash.h"
 
 bool stepsWhereReseted = false;
+uint32_t timebuttonpress = 0;
+bool butTrig = false;
+
 
 void setup() {
   delay(500);
@@ -73,7 +76,8 @@ void setup() {
 
 void loop() {
   ble_feed();//manage ble connection
-  if (!get_button())watchdog_feed();//reset the watchdog if the push button is not pressed, if it is pressed for more then WATCHDOG timeout the watch will reset
+  if (!get_button()){watchdog_feed(); butTrig=true;} //reset the watchdog if the push button is not pressed, if it is pressed for more then WATCHDOG timeout the watch will reset 
+  else if (butTrig) {setbuttontime((millis()- timebuttonpress)/100); timebuttonpress=millis(); butTrig=false; set_motor_ms(20);}
   if (get_sleep()) {//see if we are sleeping
     sleep_wait();//just sleeping
   } else {//if  we are awake do display stuff etc
@@ -86,6 +90,7 @@ void loop() {
       if (acc_input()){
          sleep_up(WAKEUP_ACCL);//check if the hand was lifted and turn on the display if so
       }
+
     }
     time_data_struct time_data = get_time();
     if (time_data.hr == 0) {// check for new day
