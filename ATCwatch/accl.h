@@ -17,6 +17,13 @@ struct accl_data_struct {
   uint8_t activity;
 };
 
+struct angle_data {
+  int32_t x;
+  int32_t y;
+  int32_t z;
+};
+
+
 void init_accl();
 void accl_config_read_write(bool rw, uint8_t addr, uint8_t *data, uint32_t len, uint32_t offset);
 void reset_accl();
@@ -28,3 +35,5 @@ accl_data_struct get_accl_data();
 void update_accl_data();
 void accl_write_reg(uint8_t reg, uint8_t data);
 uint8_t accl_read_reg(uint8_t reg);
+angle_data getangle();
+uint16_t arcsin( uint32_t avalue);
