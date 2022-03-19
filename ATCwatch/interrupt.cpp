@@ -199,7 +199,7 @@ void interrupt_button() {
     } else {
       set_backlight(7); // on button select max backlight
       display_home();
-      set_motor_ms(40);
+      //set_motor_ms(40);
       set_sleep_time();
     }
   } else {//button not pressed anymore
