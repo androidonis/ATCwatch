@@ -16,3 +16,5 @@ byte get_last_heartrate();
 void get_heartrate_ms();
 byte get_hearthistory(uint16_t history);
 void check_timed_heartrate(int minutes);
+void sethrevery(int interv);
+int get_hrint();
